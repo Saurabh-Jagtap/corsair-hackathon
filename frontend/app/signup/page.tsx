@@ -1,14 +1,11 @@
 "use client"
-import { signIn, signUp } from '@/utils/auth-client'
+import { signUp } from '@/utils/auth-client'
 import { useState } from 'react'
-import { useRouter } from "next/navigation";
 
 const Page = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    const router = useRouter()
 
     const handleSignup = async (e: any) => {
         e.preventDefault()
@@ -27,7 +24,8 @@ const Page = () => {
         const res = await signUp.email({
             name,
             email,
-            password
+            password,
+            callbackURL: "/signin",
         })
 
         setName('')
@@ -37,36 +35,7 @@ const Page = () => {
         console.log(res)
     }
 
-    const handleSignIn = async (e: any) => {
-        e.preventDefault()
-
-        if (!email.trim() || !password.trim()) {
-            alert("All fields are required!")
-            return
-        }
-
-        console.log({
-            email,
-            password
-        });
-
-        const res = await signIn.email({
-            email,
-            password
-        })
-
-        if (res.error) {
-            console.error(res.error)
-            alert(res.error.message)
-            return
-        }
-
-        setEmail('')
-        setPassword('')
-
-        console.log(res)
-        router.push('/dashboard')
-    }
+    
 
     return (
         <div>
@@ -75,15 +44,6 @@ const Page = () => {
             <input type="text" placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <button onClick={(e) => handleSignup(e)} >signup</button>
-
-            <br></br>
-            <br></br>
-            <input type="text" placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="text" placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button className='mx-4' onClick={(e) => handleSignIn(e)} >signin</button>
-            
-
-
         </div>
     )
 }

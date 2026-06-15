@@ -5,25 +5,29 @@ import React, { useEffect } from 'react'
 
 const Page = () => {
   const router = useRouter()
-  const {data, isPending } = useSession()
+  const { data, isPending } = useSession()
 
   const handleSignOut = async (e: any) => {
-        e.preventDefault()
+    e.preventDefault()
 
-        const res = await signOut()
-        console.log(res)
-        router.push('/signup')
-    }
+    const res = await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/signin"); // redirect to login page
+        },
+      },
+    })
+  }
 
-    useEffect(() => {
-      if(!isPending && !data?.session){
-        router.push('/signup')
-      }
-    }, [data, isPending, router])
-    
-    if(isPending){
-      return <div>Loading...</div>
+  useEffect(() => {
+    if (!isPending && !data?.session) {
+      router.push('/signin')
     }
+  }, [data, isPending, router])
+
+  if (isPending) {
+    return <div>Loading...</div>
+  }
   return (
     <div>
       <h1>Dashboard</h1>
