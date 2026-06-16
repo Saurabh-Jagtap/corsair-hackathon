@@ -3,4 +3,6 @@ import { pool } from "./client";
 
 export const db = drizzle(pool);
 
+export { pool }
+
 export * as schema from "./schema";

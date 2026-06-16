@@ -1,5 +1,7 @@
 import express, {type Application, type Request, type Response, type NextFunction} from 'express'
 import { ApiError } from './utils/ApiError.js';
+import emailRoutes from './routes/email.routes.js'
+import calendarRoutes from './routes/calendar.routes.js'
 
 const app:Application = express();
 
@@ -7,6 +9,8 @@ app.get('/', (req: Request, res: Response) => res.json({ message: "Hello from se
 app.get("/health", (req: Request, res: Response) => res.json({ status: "ok" }));
 
 app.use(express.json());
+app.use('/api/gmail', emailRoutes)
+app.use('/api/calendar', calendarRoutes)
 
 // global error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
