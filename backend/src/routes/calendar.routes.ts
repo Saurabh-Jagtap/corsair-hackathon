@@ -4,6 +4,6 @@ import { getCalendarEvents } from "../controllers/calendar.controllers.js";
 
 const router: Router = Router()
 
-router.get('/events',authMiddleware, getCalendarEvents)
+router.get('/events', authMiddleware, getCalendarEvents)
 
 export default router

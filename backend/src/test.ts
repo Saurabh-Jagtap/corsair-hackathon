@@ -1,41 +1,50 @@
 // backend/src/test.ts
 
 import "dotenv/config";
-import { corsair } from "./corsair.js";
+// import { corsair } from "./corsair.js";
 // console.log(corsair);
 // console.log(Object.keys(corsair));
+// backend/src/test-oauth.ts
+// import { generateOAuthUrl } from "corsair/oauth";
 
-const threads = await corsair
-  .withTenant("dev")
-  .gmail.api.threads.list();
+// console.log(generateOAuthUrl);
+// backend/src/test-callback.ts
 
-const firstThread = threads.threads[0];
+import { processOAuthCallback } from "corsair/oauth";
 
-const details = await corsair
-  .withTenant("dev")
-  .gmail.api.threads.get({
-    id: firstThread.id,
-  });
+console.log(processOAuthCallback);
 
-const headers =
-  details.messages[0].payload.headers;
+// const threads = await corsair
+//   .withTenant("dev")
+//   .gmail.api.threads.list();
 
-const subject = headers.find(
-  (h) => h.name === "Subject"
-);
+// const firstThread = threads.threads[0];
 
-const from = headers.find(
-  (h) => h.name === "From"
-);
+// const details = await corsair
+//   .withTenant("dev")
+//   .gmail.api.threads.get({
+//     id: firstThread.id,
+//   });
 
-const date = headers.find(
-  (h) => h.name === "Date"
-);
+// const headers =
+//   details.messages[0].payload.headers;
 
-console.log({
-  subject,
-  from,
-  date,
-});
+// const subject = headers.find(
+//   (h) => h.name === "Subject"
+// );
+
+// const from = headers.find(
+//   (h) => h.name === "From"
+// );
+
+// const date = headers.find(
+//   (h) => h.name === "Date"
+// );
+
+// console.log({
+//   subject,
+//   from,
+//   date,
+// });
 
 // console.log(JSON.stringify(details, null, 2));
