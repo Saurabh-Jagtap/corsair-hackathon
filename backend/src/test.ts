@@ -10,9 +10,9 @@ import "dotenv/config";
 // console.log(generateOAuthUrl);
 // backend/src/test-callback.ts
 
-import { processOAuthCallback } from "corsair/oauth";
+// import { processOAuthCallback } from "corsair/oauth";
 
-console.log(processOAuthCallback);
+// console.log(processOAuthCallback);
 
 // const threads = await corsair
 //   .withTenant("dev")
@@ -48,3 +48,20 @@ console.log(processOAuthCallback);
 // });
 
 // console.log(JSON.stringify(details, null, 2));
+
+// backend/src/test-agent.ts
+
+import { OpenAIAgentsProvider } from "@corsair-dev/mcp";
+import { tool } from "@openai/agents";
+import { corsair } from "./corsair.js";
+
+const provider = new OpenAIAgentsProvider();
+
+const tools = await provider.build({
+  corsair,
+  tool,
+});
+
+console.log(tools);
+console.log(tools.length);
+console.log(tools[0]);
