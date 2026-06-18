@@ -11,6 +11,47 @@ type EmailCardProps = {
   email: Email;
 };
 
+function formatEmailDate(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const isToday =
+    date.toDateString() === now.toDateString();
+
+  if (isToday) {
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+
+  const isYesterday =
+    date.toDateString() === yesterday.toDateString();
+
+  if (isYesterday) {
+    return "Yesterday";
+  }
+
+  const diffDays = Math.floor(
+    (now.getTime() - date.getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays < 7) {
+    return date.toLocaleDateString([], {
+      weekday: "short",
+    });
+  }
+
+  return date.toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+  });
+}
+
 function getInitials(from: string): string {
   const namePart = from.split("<")[0].trim();
   const source = namePart.length > 0 ? namePart : from;
@@ -78,7 +119,7 @@ export function EmailCard({ email }: EmailCardProps) {
                 New
               </span>
             )}
-            <span className="text-[11px] text-[#7A8B96]">{email.date}</span>
+            <span className="text-[11px] text-[#7A8B96]">{formatEmailDate(email.date)}</span>
           </div>
         </div>
 

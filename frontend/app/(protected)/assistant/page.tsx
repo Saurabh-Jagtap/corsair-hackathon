@@ -27,7 +27,7 @@ const Page = () => {
           "Unauthorized"
         );
       }
-  
+
       const res = await fetch(
         "http://localhost:8000/api/assistant/chat",
         {
@@ -35,22 +35,21 @@ const Page = () => {
           headers: {
             "Content-Type":
               "application/json",
-  
-            // temporary until BetterAuth wiring
+
             "x-user-id": session.user.id,
           },
-  
+
           body: JSON.stringify({
             message: prompt,
           }),
         }
       );
-  
+
       const data = await res.json();
       if (!res.ok) {
         throw new Error("Request failed")
       }
-  
+
       setMessages((prev) => [
         ...prev,
         {
@@ -62,25 +61,25 @@ const Page = () => {
           content: data.answer,
         },
       ]);
-  
+
     } catch (error) {
       console.error(error);
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "user",
-        content: prompt,
-      },
-      {
-        role: "assistant",
-        content:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong",
-      },
-    ]);
-    }finally{
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "user",
+          content: prompt,
+        },
+        {
+          role: "assistant",
+          content:
+            error instanceof Error
+              ? error.message
+              : "Something went wrong",
+        },
+      ]);
+    } finally {
       setLoading(false);
     }
   };
@@ -128,9 +127,16 @@ const Page = () => {
         <div className="flex-1 overflow-y-auto px-7 py-6 flex flex-col gap-4">
           {messages.length === 0 && !loading && (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-[13px] text-[#9AA8B2]">
-                Ask Triagent anything about your inbox or calendar.
-              </p>
+              <div className="flex flex-col items-center justify-center text-center">
+                <h2 className="mb-2 text-lg font-medium text-[#1A2B35]">
+                  Your AI Executive Assistant
+                </h2>
+
+                <p className="max-w-md text-sm text-[#7A8B96]">
+                  Manage emails, schedule meetings, summarize your inbox,
+                  and coordinate your calendar from a single conversation.
+                </p>
+              </div>
             </div>
           )}
 
@@ -144,7 +150,7 @@ const Page = () => {
                   {msg.content}
                 </div>
               ) : (
-                <div className="max-w-[86%] text-[13px] leading-relaxed text-[#1A2B35] whitespace-pre-wrap">
+                <div className="max-w-[70%] text-[13px] leading-relaxed text-[#1A2B35] whitespace-pre-wrap">
                   {msg.content}
                 </div>
               )}
@@ -170,19 +176,19 @@ const Page = () => {
             sendMessage(input);
             setInput("");
           }}
-          className="px-6 py-8 border-t border-[#D1D9E0]"
+          className="sticky bottom-0 px-6 py-4 border-t border-[#D1D9E0] bg-[#F4F6F7] backdrop-blur"
         >
-          <div className="flex items-center gap-2.5 bg-[#F4F6F7] border border-[#D1D9E0] rounded-full px-4 py-1">
+          <div className="flex items-center gap-3 rounded-2xl border-2 border-[#BDD0DA] bg-white px-5 py-3 shadow-sm">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Triagent anything about your inbox or calendar..."
-              className="flex-1 bg-transparent outline-none text-[13px] text-[#1A2B35] placeholder:text-[#9AA8B2] py-2"
+              placeholder="Ask Triagent to manage email, schedule meetings, or plan your day..."
+              className="flex-1 bg-transparent text-sm text-[#1A2B35] outline-none placeholder:text-[#7A8B96]"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="w-8 h-8 rounded-full bg-[#2D4A5E] flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed shrink-0 hover:bg-[#26404F] transition-colors"
+              className="h-10 w-10 rounded-xl bg-[#2D4A5E] flex items-center justify-center shrink-0 transition-all hover:bg-[#26404F] hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F4F6F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5" />

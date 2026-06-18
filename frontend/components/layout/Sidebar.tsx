@@ -58,7 +58,7 @@ export const Sidebar = () => {
   }
 
   return (
-    <aside className="w-[196px] flex flex-col bg-[#1A2B35] shrink-0 min-h-screen">
+    <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col bg-[#1A2B35]">
       {/* Logo */}
       <div className="px-[18px] py-5 border-b border-[#243A47]">
         <span className="font-serif text-[16px] text-[#E8ECF0]">
