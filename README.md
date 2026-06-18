@@ -10,8 +10,6 @@ Built for modern professionals who want to spend less time managing tools and mo
 
 ## 📸 Screenshots
 
-Add screenshots before deployment.
-
 ### Landing
 
 <img width="1902" height="911" alt="Screenshot 2026-06-18 222031" src="https://github.com/user-attachments/assets/51b8eec0-cfc0-4a7a-9060-58621141e16b" />
