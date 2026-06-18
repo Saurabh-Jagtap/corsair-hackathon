@@ -23,20 +23,24 @@ export const assistantChat = async (
 TENANT_ID=${req.user.id}
 
 ${userMessage}
-`
+`,
+            { maxTurns: 4 }
         );
 
+        console.log(result)
         return res.json({
             success: true,
             answer: result.finalOutput,
         });
     } catch (error) {
-        console.error("AGENT ERROR:");
         console.error(error);
 
         return res.status(500).json({
             success: false,
-            message: "Agent failed",
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Agent failed",
         });
     }
 };

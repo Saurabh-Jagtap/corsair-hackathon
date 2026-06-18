@@ -52,10 +52,7 @@ export const authController = async (
         }
       );
 
-    return res.status(200).json({
-      success: true,
-      data: result,
-    });
+    res.redirect(`${process.env.FRONTEND_URL}/connect/success?plugin=${result.plugin}`)
   } catch (error) {
     console.error(error);
 

@@ -1,7 +1,8 @@
 "use client"
 import { QUICK_ACTIONS } from '@/app/constants/assistant';
 import { useSession } from '@/utils/auth-client';
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Message = {
   role: "user" | "assistant";
@@ -14,40 +15,56 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
 
   const { data: session } = useSession();
+  const hasAutoRun = useRef(false);
+  const searchParams = useSearchParams();
+  const router = useRouter()
 
-  const sendMessage = async (
-    prompt: string
-  ) => {
-    setLoading(true);
-
-    if (!session) {
-      throw new Error(
-        "Unauthorized"
-      );
-    }
-
-    const res = await fetch(
-      "http://localhost:8000/api/assistant/chat",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-
-          // temporary until BetterAuth wiring
-          "x-user-id": session.user.id,
-        },
-
-        body: JSON.stringify({
-          message: prompt,
-        }),
+  const sendMessage = async (prompt: string) => {
+    try {
+      setLoading(true);
+      if (!session) {
+        throw new Error(
+          "Unauthorized"
+        );
       }
-    );
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error("Request failed")
-    }
+  
+      const res = await fetch(
+        "http://localhost:8000/api/assistant/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+  
+            // temporary until BetterAuth wiring
+            "x-user-id": session.user.id,
+          },
+  
+          body: JSON.stringify({
+            message: prompt,
+          }),
+        }
+      );
+  
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error("Request failed")
+      }
+  
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "user",
+          content: prompt,
+        },
+        {
+          role: "assistant",
+          content: data.answer,
+        },
+      ]);
+  
+    } catch (error) {
+      console.error(error);
 
     setMessages((prev) => [
       ...prev,
@@ -57,12 +74,31 @@ const Page = () => {
       },
       {
         role: "assistant",
-        content: data.answer,
+        content:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong",
       },
     ]);
-
-    setLoading(false);
+    }finally{
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    const prompt =
+      searchParams.get("prompt");
+
+    if (!prompt) return;
+
+    if (hasAutoRun.current) return;
+
+    hasAutoRun.current = true;
+
+    sendMessage(prompt);
+
+    router.replace("/assistant");
+  }, [searchParams, router]);
 
   return (
     <div className="flex h-screen bg-[#E8ECF0] font-sans text-[#1A2B35]">
@@ -140,7 +176,7 @@ const Page = () => {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Clarify anything about your inbox or calendar..."
+              placeholder="Ask Triagent anything about your inbox or calendar..."
               className="flex-1 bg-transparent outline-none text-[13px] text-[#1A2B35] placeholder:text-[#9AA8B2] py-2"
             />
             <button
