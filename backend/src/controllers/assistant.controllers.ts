@@ -24,7 +24,7 @@ TENANT_ID=${req.user.id}
 
 ${userMessage}
 `,
-            { maxTurns: 4 }
+            { maxTurns: 10 }
         );
 
         console.log(result)
