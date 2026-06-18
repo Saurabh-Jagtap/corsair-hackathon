@@ -1,6 +1,13 @@
 import { corsair } from "../corsair.js";
 
-export const getThreads = async (userId: string) => {
+type SendEmailParams = {
+    tenantId: string;
+    to: string;
+    subject: string;
+    body: string;
+};
+
+export const getThreadsService = async (userId: string) => {
   const threads = await corsair
     .withTenant(userId)
     .gmail.api.threads.list();
@@ -17,20 +24,13 @@ export const getThreads = async (userId: string) => {
 
       const headers = message?.payload?.headers ?? [];
 
-      const subject =
-        headers.find((h: any) => h.name === "Subject")
-          ?.value ?? "No Subject";
+      const subject =headers.find((h: any) => h.name === "Subject")?.value ?? "No Subject";
 
-      const from =
-        headers.find((h: any) => h.name === "From")
-          ?.value ?? "Unknown Sender";
+      const from = headers.find((h: any) => h.name === "From")?.value ?? "Unknown Sender";
 
-      const date =
-        headers.find((h: any) => h.name === "Date")
-          ?.value ?? "";
+      const date =headers.find((h: any) => h.name === "Date")?.value ?? "";
 
-      const unread =
-        message?.labelIds?.includes("UNREAD") ?? false;
+      const unread = message?.labelIds?.includes("UNREAD") ?? false;
 
       return {
         id: thread.id,
@@ -43,7 +43,37 @@ export const getThreads = async (userId: string) => {
     })
   );
 
-  console.log(transformedThreads[0]);
-
   return transformedThreads;
 };
+
+export class EmailService {
+    static async sendEmail({
+        tenantId,
+        to,
+        subject,
+        body,
+    }: SendEmailParams) {
+
+        const tenant =
+            corsair.withTenant(tenantId);
+
+        const email = [
+            `To: ${to}`,
+            `Subject: ${subject}`,
+            `Content-Type: text/plain; charset=utf-8`,
+            "",
+            body,
+        ].join("\r\n");
+
+        const raw = Buffer
+            .from(email)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+
+        return tenant.gmail.api.messages.send({
+            raw,
+        });
+    }
+}

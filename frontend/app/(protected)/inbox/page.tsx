@@ -3,6 +3,8 @@
 import { Inbox as InboxIcon, Search } from "lucide-react";
 import { EmailCard } from "@/components/inbox/EmailCard";
 import { useEmails } from "@/hooks/useEmails";
+import { useState } from "react";
+import { ComposeEmailModal } from "@/components/inbox/ComposeEmailModal";
 
 type Email = {
   id: string;
@@ -70,9 +72,22 @@ function EmptyState() {
 }
 
 const InboxPage = () => {
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+
   const { data, isLoading, error } = useEmails();
 
   const emails: Email[] = data?.data ?? [];
+
+  const filteredEmails = emails.filter(
+    (email) =>
+      email.subject
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      email.from
+        .toLowerCase()
+        .includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-full bg-[#F4F6F7]">
@@ -90,9 +105,16 @@ const InboxPage = () => {
           <Search className="h-4 w-4 flex-shrink-0 text-[#7A8B96]" />
           <input
             type="text"
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search emails..."
             className="w-full bg-transparent text-sm text-[#1A2B35] placeholder:text-[#7A8B96] focus:outline-none"
           />
+          <button
+            onClick={() => setOpen(true)}
+            className="cursor-pointer rounded-lg bg-[#1A2B35] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#243A47]"
+          >
+            Compose
+          </button>
         </div>
 
         {/* Email list */}
@@ -104,12 +126,18 @@ const InboxPage = () => {
           <EmptyState />
         ) : (
           <div className="space-y-3">
-            {emails.map((email) => (
+            {filteredEmails.map((email) => (
               <EmailCard key={email.id} email={email} />
             ))}
           </div>
         )}
       </div>
+      <ComposeEmailModal
+        open={open}
+        onClose={() =>
+          setOpen(false)
+        }
+      />
     </div>
   );
 };

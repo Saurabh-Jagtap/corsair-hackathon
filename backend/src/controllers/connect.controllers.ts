@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { generateOAuthUrl } from "corsair/oauth";
 
 import { corsair } from "../corsair.js";
+import { ConnectService } from "../services/connect.services.js";
 
 const REDIRECT_URI =
     `${process.env.APP_URL}/api/auth`;
@@ -37,14 +38,11 @@ export const connectController = async (
         const tenantId = req.user.id;
 
         const { url, state } =
-            await generateOAuthUrl(
-                corsair,
+            await ConnectService.generateConnectionUrl({
                 plugin,
-                {
-                    tenantId,
-                    redirectUri: REDIRECT_URI,
-                }
-            );
+                tenantId,
+                redirectUri: REDIRECT_URI,
+            });
 
         pendingStates.add(state);
 
