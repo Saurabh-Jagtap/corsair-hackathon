@@ -13,6 +13,11 @@ export class ConnectService {
         tenantId,
         redirectUri,
     }: ConnectParams) {
+        console.log({
+            plugin,
+            tenantId,
+            redirectUri,
+        });
         const { url, state } =
             await generateOAuthUrl(
                 corsair,
@@ -22,6 +27,10 @@ export class ConnectService {
                     redirectUri,
                 }
             );
+        console.log({
+            url,
+            state,
+        });
 
         return {
             url,

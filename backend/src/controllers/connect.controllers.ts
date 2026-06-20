@@ -1,7 +1,4 @@
 import type { Request, Response } from "express";
-import { generateOAuthUrl } from "corsair/oauth";
-
-import { corsair } from "../corsair.js";
 import { ConnectService } from "../services/connect.services.js";
 
 const REDIRECT_URI =
