@@ -10,4 +10,4 @@ const signin = async () => {
   });
 }
 
-export const { signIn, signUp, signOut, useSession } = authClient
+export const { signIn, signUp, signOut, useSession, sendVerificationEmail, requestPasswordReset, resetPassword } = authClient

@@ -1,6 +1,7 @@
 "use client";
 
 import { AIWorkflow } from "@/components/landing/AIWorkFlow";
+import TriagentLanding from "@/components/landing/claudeLandingPage";
 import { CTA } from "@/components/landing/CTA";
 import { Features } from "@/components/landing/Features";
 import { Footer } from "@/components/landing/Footer";
@@ -31,6 +32,7 @@ export default function Home() {
       <Features />
       <CTA />
       <Footer />
+      {/* <TriagentLanding/> */}
     </div>
   );
 }

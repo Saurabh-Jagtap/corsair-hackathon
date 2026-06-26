@@ -1,5 +1,6 @@
 "use client"
 import { signIn, signUp } from '@/utils/auth-client'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const SignUpPage = () => {
@@ -7,6 +8,8 @@ const SignUpPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const router = useRouter()
 
     const handleSignup = async (e: any) => {
         e.preventDefault()
@@ -25,6 +28,8 @@ const SignUpPage = () => {
                 password,
                 callbackURL: "/signin",
             })
+
+            router.push(`/verify-email?type=verify&email=${encodeURIComponent(email.trim())}`);
 
             setName('')
             setEmail('')

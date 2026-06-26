@@ -1,5 +1,8 @@
 {
   "name": "triagent",
   "private": true,
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "build": "pnpm --filter @repo/db build && pnpm --filter backend build && pnpm --filter frontend build"
+  }
 }
